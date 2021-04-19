@@ -1,9 +1,27 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<h1>BookLib Home</h1>
+<p>Welcome to BookLib, your very own book library</p>
+<h2>BookLib Stats</h2>
+<p>BookLib's Library currently has the following stats:</p>
+<ul>
+    <li>Books: {{num_books}}</li>
+    <li>Copies: {{num_instances}}</li>
+    <li>Copies Available: {{num_instances_avail}}</li>
+    <li>Authors: {{num_authors}}</li>
+</ul>
+
+<br>
+<h2>Latest Arrivals</h2>
 {% if latest_book_list %}
-    <ul>
-	    {% for book in latest_book_list %}
-	    <li><a href="/books/{{ book_name }}/">{{ book.book_name }}</a></li>
-	    {% endfor %}
-    </ul>
+<ul>
+	{% for book in latest_book_list %}
+	<li><a href="/books/{{ book.id }}/">{{ book.title }}</a></li>
+	{% endfor %}
+</ul>
 {% else %}
-    <p>No books are available.</p>
+<p>No books are available.</p>
 {% endif %}
+
+{% endblock %}
