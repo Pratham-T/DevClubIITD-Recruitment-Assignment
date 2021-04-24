@@ -1,0 +1,26 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h2>Search Results</h2>
+    {% if book_search_results %}
+        <ul>
+            <h4>Matching Books: ({{book_search_results.count}})</h4>
+            {% for book in book_search_results %}
+            <li>
+                <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
+            </li>
+            {% endfor %}
+        </ul>{% endif %}
+    {% if author_search_results %}
+        <ul>
+            <h4>Matching Authors: ({{author_search_results.count}})</h4>
+            {% for author in author_search_results %}
+            <li>
+                <a href="{{ author.get_absolute_url }}">{{ author.last_name }}, {{ author.first_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No search results found.</p>
+    {% endif %}
+{% endblock %}

@@ -1,10 +1,17 @@
 {% extends '../accounts/base.html' %}
 
 {% block content %}
-    <h1>System Login</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button>Login</button>
-    </form>
+    <div class="login_form">
+        <h1>System Login</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button>Login</button>
+        </form>
+    </div>
+    <style>
+        .login_form{
+            text-align: center;
+        }
+    </style>
 {% endblock %}

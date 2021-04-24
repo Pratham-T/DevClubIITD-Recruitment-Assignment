@@ -4,7 +4,7 @@
     <h1>Title: {{book.title}}</h1>
 
     <p>
-        Author: <a href="">{{book.author}}</a><br>
+        Author: <a href="{{book.author.get_absolute_url}}">{{book.author}}</a><br>
         Summary: {{book.summary}}<br>
         Genre: {{book.genre}}<br>
         Publisher: {{book.publisher}}<br>
@@ -12,11 +12,16 @@
     </p>
 
     <h3>Copies:</h3>
-    <hr>
+    
     {% for copy in book.bookinstance_set.all %}
         <hr>
         <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">
             {{ copy.get_status_display }}
+            {% if user.is_authenticated %}
+                {% if copy.status == 'a' %}
+                    <br><a href="{% url 'borrow_book_request' book.pk copy.id %}">Borrow</a>
+                {% endif %}
+            {% endif %}
         </p>
         {% if copy.status != 'a' %}
             <p><strong>Due to be returned:</strong> {{ copy.due_back }}</p>

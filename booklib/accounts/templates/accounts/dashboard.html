@@ -2,5 +2,100 @@
 
 {% block content %}
     <h1>Welcome, {{user.username}}</h1>
-    <a href="{% url 'logout' %}">Logout</a>
+    {% if user.is_staff or is_Librarian %}<a href="/admin">Admin Site</a>{% endif %}
+    <br>
+
+    {% if is_Librarian or user.is_staff %}
+
+        <h2>All Borrowed Books</h2>
+
+        {% if all_borrowed_books %}
+
+            <table cellspacing=10>
+                <tr>
+                    <th>Book</th>
+                    <th>Borrower</th>
+                    <th>Due Back</th>
+                </tr>
+                {% for bookinst in all_borrowed_books %}
+                <tr>
+                    <td>{{bookinst.book.title}}</td>
+                    <td>{{bookinst.borrower}}</td>
+                    <td>{{bookinst.due_back}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        
+        {% else %}
+
+            <p>No Books Currently Borrowed.</p>
+        
+        {% endif %}
+
+        <h3>Pending Borrow requests</h3>
+        {% if all_requested_books %}
+            <ul>
+                {% for req_book in all_requested_books %}
+                <li>
+                    <a href="{% url 'book_detail' req_book.book_id.book.pk %}">{{req_book.book_id.book.title}}</a>
+                    ({{req_book.book_id.book.author}}) - Return Date Given : {{req_book.return_date}}
+                    <form action="{% url 'accept' req_book.book_id.id %}" method="GET">
+                        {% csrf_token %}
+                        <input type="submit" value="Accept" name="accept">
+                    </form>
+                    <form action="{% url 'reject' req_book.book_id.id %}" method="GET">
+                        {% csrf_token %}
+                        <input type="submit" value="Reject" name="reject">
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No requests pending.</p>
+        {% endif %}
+
+    {% else %}
+
+        <h3>Borrowed books</h3>
+
+        {% if borrowed_books %}
+
+            <ul>
+                {% for bookinst in borrowed_books %}
+                <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
+                    <a href="{% url 'book_detail' bookinst.book.pk %}">{{bookinst.book.title}}</a> 
+                    <br>Due date: {{ bookinst.due_back }}
+                    <form action="{% url 'return' bookinst.id %}" method="GET">
+                        {% csrf_token %}
+                        <input type="submit" value="Return" name="return">
+                    </form>
+                    <form action="{% url 'borrow_book_request' bookinst.book.pk bookinst.id %}" method="GET">
+                        {% csrf_token %}
+                        <input type="submit" value="Renew" name="renew">
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+
+            <p>There are no books borrowed.</p>
+
+        {% endif %}
+
+        <h3>Pending Borrow/Renew requests</h3>
+        {% if requested_books %}
+            <ul>
+                {% for req_book in requested_books %}
+                <li>
+                    <a href="{% url 'book_detail' req_book.book_id.book.pk %}">{{req_book.book_id.book.title}}</a>
+                    ({{req_book.book_id.book.author}})
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No requests pending.</p>
+        {% endif %}
+
+    {% endif %}
+    
 {% endblock %}

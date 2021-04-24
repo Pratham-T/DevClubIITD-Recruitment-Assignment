@@ -1,6 +1,9 @@
 from django.db import models
+from django.db.models.base import Model
 from django.urls import reverse
 import uuid
+from django.contrib.auth.models import User
+from datetime import date
 
 
 # Create your models here.
@@ -33,11 +36,19 @@ class BookInstance(models.Model):
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book Availability')
 
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
     class Meta:
         ordering = ['due_back']
 
     def __str__(self):
         return f'{self.id}({self.book.title})'
+
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today()>self.due_back:
+            return True
+        return False
 
 
 class Author(models.Model):
@@ -52,3 +63,23 @@ class Author(models.Model):
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name}'
+
+class RequestedBooks(models.Model):
+    book_id = models.OneToOneField('BookInstance', on_delete=models.RESTRICT, primary_key=True)
+    return_date = models.DateField()
+    requester = models.ForeignKey(User, on_delete=models.RESTRICT)
+
+    REQUEST_STATUS = (
+        ('a', 'Accepted'),
+        ('r', 'Rejected'),
+        ('p', 'Pending'),
+    )
+
+    status = models.CharField(max_length=1, choices=REQUEST_STATUS, default='p', help_text='Borrow Request Status')
+
+    def __str__(self):
+        return f'Book: {self.book_id.book.title} ({self.book_id.book.author}), Copy: {self.book_id.id}'
+
+    def remove_rejected():
+        rejected_requests = RequestedBooks.objects.filter(status='r')
+        rejected_requests.delete()
