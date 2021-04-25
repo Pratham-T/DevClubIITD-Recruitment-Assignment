@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, Permission
 # Create your models here.
 Librarian, created = Group.objects.get_or_create(name='Librarian')
 
-MODELS = ['book', 'book instance', 'author', 'requested book']
+MODELS = ['book', 'book instance', 'author', 'requested books']
 PERMISSIONS = ['view', 'add', 'delete', 'change']
 for model in MODELS:
     for permission in PERMISSIONS:

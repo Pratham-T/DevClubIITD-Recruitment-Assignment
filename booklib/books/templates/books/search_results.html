@@ -10,7 +10,8 @@
                 <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
             </li>
             {% endfor %}
-        </ul>{% endif %}
+        </ul>
+    {% endif %}
     {% if author_search_results %}
         <ul>
             <h4>Matching Authors: ({{author_search_results.count}})</h4>
@@ -20,7 +21,8 @@
             </li>
             {% endfor %}
         </ul>
-    {% else %}
+    {% endif %}
+    {% if not (book_search_results or author_search_results) %}
         <p>No search results found.</p>
     {% endif %}
 {% endblock %}
