@@ -14,6 +14,7 @@ class Book(models.Model):
     genre = models.CharField(max_length=25, help_text='Enter genre of this book', null=True)
     summary = models.TextField(max_length=1000, help_text='Enter a brief description of book', null=True)
     isbn = models.CharField('ISBN', max_length=13, unique=True, help_text='13 character ISBN number')
+    location = models.CharField('Location', max_length=4)
 
     def __str__(self):
         return self.title
