@@ -38,6 +38,18 @@ Django Python Framework
 
 Heroku (for hosting)
 
+### How to run locally
+Requirements: 
+
+1. Python 3.6+ (I used 3.8.x)
+2. Django 2.2+ (I used the latest version available 3.2)
+
+Steps:
+1. Clone or download the zip file of the repo in your local machine.
+2. Go into the outer booklib directory (which contains manage.py file) and run the command: `python manage.py runserver`
+
+The server should be up and running on the default port. Go to the url shown in your terminal (Generally: `127.0.0.1:8000`)
+
 
 ### Website Overview
 */* : base url redirects to /books/
